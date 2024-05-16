@@ -1,14 +1,13 @@
 using System;
 using UnityEngine;
 using System.Collections;
-using Unity.VisualScripting;
-using UnityEngine.UI;
 
 public enum RunOption
 {
     Move,
     MoveLocal,
-    Rotate
+    Rotate,
+    Scale
 }
 
 public class Anim 
@@ -22,6 +21,7 @@ public class Anim
     private Coroutine _workingCr;
     private Action _onStart = null;
     private Action _onComplete = null;
+    private float _delay = 0f;
 
 
 
@@ -32,11 +32,8 @@ public class Anim
 
     #endregion
     
-
     
-    
-    
-    #region Run & constructors
+    #region Run, Stop & constructors
 
     public Anim(RunOption runOption, Transform transform, Vector3 targetV3, float animTime, AnimController ctrl)
     {
@@ -73,6 +70,9 @@ public class Anim
             case RunOption.Rotate:
                 _tr.eulerAngles = _targetV3;
                 break;
+            case RunOption.Scale:
+                _tr.localScale = _targetV3;
+                break;
             
             default:
                 throw new ArgumentOutOfRangeException();
@@ -89,6 +89,7 @@ public class Anim
             RunOption.Move => MoveCr(),
             RunOption.MoveLocal => MoveLocalCR(),
             RunOption.Rotate => RotateCR(),
+            RunOption.Scale => ScaleCr(),
             _ => MoveCr()
         };
     
@@ -113,7 +114,6 @@ public class Anim
     
     #region OnStart
 
-
     public Anim OnStart(Action onStart)
     {
         _onStart = onStart;
@@ -134,8 +134,11 @@ public class Anim
 
     #region SetDelay
 
-    private float _delay = 0f;
-    public void SetDelay(float delay) => _delay = delay;
+    public Anim SetDelay(float delay)
+    {
+        _delay = delay;
+        return this;
+    }
 
     #endregion
 
@@ -161,7 +164,7 @@ public class Anim
         while (tPass <= _inTime)
         {
             var e = EasingMgr.GetEase(_ease, tPass / _inTime);
-            _tr.position = Vector3.Lerp(startV3, _targetV3, e);
+            _tr.position = Vector3.LerpUnclamped(startV3, _targetV3, e);
             tPass += Time.deltaTime;
             yield return null;
         }
@@ -178,7 +181,7 @@ public class Anim
         while (tPass <= _inTime)
         {
             var e = EasingMgr.GetEase(_ease, tPass / _inTime);
-            _tr.localPosition = Vector3.Lerp(startV3, _targetV3, e);
+            _tr.localPosition = Vector3.LerpUnclamped(startV3, _targetV3, e);
             tPass += Time.deltaTime;
             yield return null;
         }
@@ -195,7 +198,24 @@ public class Anim
         while (tPass <= _inTime)
         {
             var e = EasingMgr.GetEase(_ease, tPass / _inTime);
-            _tr.eulerAngles = Vector3.Lerp(startEuler, _targetV3, e);
+            _tr.eulerAngles = Vector3.LerpUnclamped(startEuler, _targetV3, e);
+            tPass += Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    #endregion
+
+    #region Scale
+
+    private IEnumerator ScaleCr()
+    {
+        var startEuler = _tr.eulerAngles;
+        var tPass = 0f;
+        while (tPass <= _inTime)
+        {
+            var e = EasingMgr.GetEase(_ease, tPass / _inTime);
+            _tr.localScale = Vector3.LerpUnclamped(startEuler, _targetV3, e);
             tPass += Time.deltaTime;
             yield return null;
         }
@@ -204,12 +224,10 @@ public class Anim
     #endregion
 
 
-
     #region Statics
 
     private static bool IsItMoveType(RunOption runOption)
         => runOption is RunOption.Move or RunOption.MoveLocal;
 
     #endregion
-
 }
