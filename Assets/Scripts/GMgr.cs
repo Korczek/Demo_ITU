@@ -20,6 +20,7 @@ public class GMgr : MonoBehaviourSingleton<GMgr>
 
     public void Tester()
     {
+        
         objectToMove.AnimMove(new Vector3(0, 0, 0), .2f)
             .OnComplete(() =>
             {
