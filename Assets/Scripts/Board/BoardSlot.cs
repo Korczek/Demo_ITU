@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public enum NeighborDirection
@@ -13,9 +15,8 @@ public class BoardSlot : SpawnableObject
     public BoardSlot[] neighbors;
     public Vector2Int gridPos;
 
-    // object on board (moveble unmovable) 
-    
-    
+    public Path myPathElement;
+    public bool IsFinish { get; private set; }
     
     public override void OnSpawn()
     {
@@ -30,5 +31,26 @@ public class BoardSlot : SpawnableObject
             .SetEase(Ease.OutBack)
             .SetDelay(delay)
             .Run();
+    }
+
+    public bool DoIHavePathToFinish(HashSet<BoardSlot> visited)
+    {
+        if (visited.Contains(this))
+            return false;
+        
+        visited.Add(this);
+
+        if (IsFinish)
+            return true;
+
+        foreach (var n in neighbors.Where(n => n != null))
+        {
+            if (!n.DoIHavePathToFinish(visited))
+                continue;
+            
+            return true;
+        }
+
+        return false;
     }
 }

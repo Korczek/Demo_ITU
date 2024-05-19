@@ -2,25 +2,25 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class BoardGenerator : MonoBehaviourSingleton<BoardGenerator>
+public class Board : MonoBehaviourSingleton<Board>
 {
     public Transform slotsParent;
-    private readonly List<BoardSlot> _boardTiles = new();
+    private readonly List<BoardSlot> _allSlots = new();
     
     [Space(20)] 
+    
     [Header("Slots offset")] 
     public float widthOffset;
     public float lengthOffset;
 
     [Space(20)]
+    
     [Header("Board size")]
     public int width;
     public int length;
     
-    // this pathfinding shit 
-    
-    // when generation completed create plane and remove movable space for obstacles (recalculate) 
-    
+    #region Grid generation & neighbor assignment
+
     public void GenerateGrid()
     {
         var startPos = new Vector3(widthOffset * (width - 1) * -.5f, 0, (length - 1) * lengthOffset * -.5f);
@@ -28,19 +28,18 @@ public class BoardGenerator : MonoBehaviourSingleton<BoardGenerator>
         for (int i = 0; i < width; i++)
         for (int j = 0; j < length; j++)
         {
-            var slot = GetSlot(startPos + new Vector3(i * widthOffset, 0, j * lengthOffset));
+            var slot = GetNewSlot(startPos + new Vector3(i * widthOffset, 0, j * lengthOffset));
             slot.gridPos = new Vector2Int(i, j);
             AddNeighbors(slot);
-            _boardTiles.Add(slot);
+            _allSlots.Add(slot);
             slot.AnimSlotIn(i * .15f);
         }
     }
 
     private void AddNeighbors(BoardSlot slot)
     {
-        
-        var left = _boardTiles.FirstOrDefault(t => t.gridPos == slot.gridPos - new Vector2Int(1, 0));
-        var down = _boardTiles.FirstOrDefault(t => t.gridPos == slot.gridPos - new Vector2Int(0, 1));
+        var left = _allSlots.FirstOrDefault(t => t.gridPos == slot.gridPos - new Vector2Int(1, 0));
+        var down = _allSlots.FirstOrDefault(t => t.gridPos == slot.gridPos - new Vector2Int(0, 1));
         
         if (left != null)
         {
@@ -55,7 +54,20 @@ public class BoardGenerator : MonoBehaviourSingleton<BoardGenerator>
         }
     }
 
-    private BoardSlot GetSlot(Vector3 position)
+    #endregion
+    
+
+
+
+    
+
+    public BoardSlot GetSlotByGridPos(Vector2Int slotPos)
+    {
+        return _allSlots.FirstOrDefault(s => s.gridPos == slotPos);
+    }
+    
+    
+    private BoardSlot GetNewSlot(Vector3 position)
     {
         return SpawnMgr.Instance.Spawn("Slot", position, Vector3.zero, slotsParent)
             .GetComponent<BoardSlot>();
