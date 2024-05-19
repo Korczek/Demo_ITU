@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public static class AnimationExtensions 
@@ -21,6 +22,10 @@ public static class AnimationExtensions
     public static void AnimBreak(this Transform tr, bool setOnTarget = false)
         => GetOrCreateAnimController(tr.gameObject)
             .StopAnimation(setOnTarget);
+
+    public static Anim WaitAndRun(this GameObject o, Action toRunAfterDelay, float runDelayTime)
+        => GetOrCreateAnimController(o)
+            .StartWait(RunOption.WaitAndRun, runDelayTime, toRunAfterDelay);
     
     private static AnimController GetOrCreateAnimController(GameObject go)
     {

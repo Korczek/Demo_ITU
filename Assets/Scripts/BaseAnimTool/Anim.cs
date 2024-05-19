@@ -7,7 +7,8 @@ public enum RunOption
     Move,
     MoveLocal,
     Rotate,
-    Scale
+    Scale,
+    WaitAndRun
 }
 
 public class Anim 
@@ -21,6 +22,7 @@ public class Anim
     private Coroutine _workingCr;
     private Action _onStart = null;
     private Action _onComplete = null;
+    private Action _toRunOnTimesUp = null;
     private float _delay = 0f;
 
 
@@ -40,6 +42,14 @@ public class Anim
         _tr = transform;
         _runOption = runOption;
         _targetV3 = targetV3;
+        _inTime = animTime;
+        _controller = ctrl;
+    }
+
+    public Anim(RunOption runOption, Action toRunOnTimeEnd, float animTime, AnimController ctrl)
+    {
+        _runOption = runOption;
+        _toRunOnTimesUp = toRunOnTimeEnd;
         _inTime = animTime;
         _controller = ctrl;
     }
@@ -73,6 +83,7 @@ public class Anim
             case RunOption.Scale:
                 _tr.localScale = _targetV3;
                 break;
+            case RunOption.WaitAndRun: break; // just to prevent form printing this stuff above 
             
             default:
                 throw new ArgumentOutOfRangeException();
@@ -90,6 +101,7 @@ public class Anim
             RunOption.MoveLocal => MoveLocalCR(),
             RunOption.Rotate => RotateCR(),
             RunOption.Scale => ScaleCr(),
+            RunOption.WaitAndRun => WaitAndRun(),
             _ => MoveCr()
         };
     
@@ -149,6 +161,23 @@ public class Anim
     {
         _ease = ease;
         return this;
+    }
+
+    #endregion
+    
+    // Action runner
+
+    #region WaitAndRun
+
+    private IEnumerator WaitAndRun()
+    {
+        var tPass = 0f;
+        while (tPass <= _inTime) // lighter than wait for seconds xD
+        {
+            tPass += Time.deltaTime;
+            yield return null;
+        }
+        _toRunOnTimesUp?.Invoke();
     }
 
     #endregion

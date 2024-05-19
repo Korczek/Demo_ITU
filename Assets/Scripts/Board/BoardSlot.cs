@@ -22,7 +22,8 @@ public class BoardSlot : SpawnableObject
 {
     public BoardSlot[] neighbors;
     public Vector2Int gridPos;
-
+    public MeshRenderer meshRenderer;
+    
     private SlotDecor _decor;
     
     public SlotRole slotRole { get; private set; } = SlotRole.Path;
@@ -52,8 +53,9 @@ public class BoardSlot : SpawnableObject
             .GetComponent<SlotDecor>();
     }
 
-    public void AnimSlotIn(float delay)
+    public void Initialize(float delay, SlotRole role)
     {
+        meshRenderer.sharedMaterial = Const.Materials.slotsMaterials[(int)role];
         transform.localScale = Vector3.zero;
         transform.AnimScale(1, .45f)
             .SetEase(Ease.OutBack)

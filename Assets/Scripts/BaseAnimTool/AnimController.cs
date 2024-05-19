@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,9 +8,7 @@ public class AnimController : MonoBehaviour
 
     public Anim StartAnimation(RunOption ro, Transform tr, Vector3 targetV3, float animTime)
     {
-        for (var i = 0; i < _allAnims.Count; i++)
-            if (_allAnims[i].IsThisSameRunOption(ro))
-                _allAnims[i].Stop(false);
+        StopThisSame(ro);
         
         var anim = new Anim(ro, tr, targetV3, animTime, this);
         _allAnims.Add(anim);
@@ -19,6 +18,20 @@ public class AnimController : MonoBehaviour
     public Anim StartAnimation(RunOption ro, Transform tr, float scale, float animTime)
         => StartAnimation(ro, tr, Vector3.one * scale, animTime);
 
+    public Anim StartWait(RunOption ro, float animTime, Action toRunOnFinish)
+    {
+        StopThisSame(ro);
+        var anim = new Anim(ro, toRunOnFinish, animTime, this);
+        _allAnims.Add(anim);
+        return anim;
+    }
+
+    private void StopThisSame(RunOption ro)
+    {
+        for (var i = 0; i < _allAnims.Count; i++)
+            if (_allAnims[i].IsThisSameRunOption(ro))
+                _allAnims[i].Stop(false);
+    }
 
     public void RemoveAnim(Anim anim) => _allAnims.Remove(anim);
 

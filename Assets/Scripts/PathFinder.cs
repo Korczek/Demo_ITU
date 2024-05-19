@@ -46,7 +46,8 @@ public class PathFinder : MonoBehaviourSingleton<PathFinder>
             
             foreach (var n in current.neighbors)
             {
-                if (n == null || closedSet.Contains(n))
+                
+                if (n == null || n.slotRole == SlotRole.Obstacle || closedSet.Contains(n))
                     continue;
 
                 var tentativeGScore = gScore[current] + Cost;

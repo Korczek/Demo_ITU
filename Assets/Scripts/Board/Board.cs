@@ -21,19 +21,44 @@ public class Board : MonoBehaviourSingleton<Board>
     
     #region Grid generation & neighbor assignment
 
-    public void GenerateGrid()
+    public void GenerateGrid(MapInitData mapInitData)
     {
+
+        width = mapInitData.Width;
+        length = mapInitData.Length;
+        
         var startPos = new Vector3(widthOffset * (width - 1) * -.5f, 0, (length - 1) * lengthOffset * -.5f);
+
+        var delay = .15f;
         
         for (int i = 0; i < width; i++)
         for (int j = 0; j < length; j++)
         {
+            var role = (SlotRole)mapInitData.StartInstruction[i * length + j];
+
+            if (role == SlotRole.Null)
+                continue;
+            
+            
             var slot = GetNewSlot(startPos + new Vector3(i * widthOffset, 0, j * lengthOffset));
             slot.gridPos = new Vector2Int(i, j);
             AddNeighbors(slot);
             _allSlots.Add(slot);
-            slot.AnimSlotIn(i * .15f);
+            slot.Initialize(i * delay, role);
+
+            if (role == SlotRole.Start)
+                Mgr.Instance.SetStartPoint(slot);
+            if (role == SlotRole.Finish)
+                Mgr.Instance.SetFinishPoint(slot);
         }
+
+        gameObject.WaitAndRun(
+            toRunAfterDelay: () =>
+            {
+                InputMgr.Instance.InputLocked = false;
+            },
+            runDelayTime: width * delay
+        ).Run();
     }
 
     private void AddNeighbors(BoardSlot slot)

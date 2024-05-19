@@ -1,18 +1,23 @@
 using System;
 using UnityEngine;
 
-public class GMgr : MonoBehaviourSingleton<GMgr>
+public class Mgr : MonoBehaviourSingleton<Mgr>
 {
     private BoardSlot _start, _finish;
     public Camera mainCamera { get; private set; }
 
-    public bool Loaded { get; private set; } = false;
     
     private void Start()
     {
         mainCamera = Camera.main;
-        Board.Instance.GenerateGrid();
-        Loaded = true;
+        UIMgr.Instance.InitUi();
+    }
+
+    public void StartDemo(MapInitData mapInitData)
+    {
+        Board.Instance.GenerateGrid(mapInitData);
+        UIMgr.Instance.SelectScreen(NowScreen.InGame);
+        // set camera 
     }
     
     // make ui element that will popup when user holds mouse clicked on element for some time

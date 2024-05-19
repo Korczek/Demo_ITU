@@ -50,7 +50,7 @@ MonoBehaviour:
   callableObjectInUse: 0
   neighbors: []
   gridPos: {x: 0, y: 0}
-  myPathElement: {fileID: 0}
+  meshRenderer: {fileID: 3396233849533041285}
 --- !u!65 &2944585158956418510
 BoxCollider:
   m_ObjectHideFlags: 0
