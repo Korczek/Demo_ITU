@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7035614588776896253}
   - component: {fileID: 1700516323613206678}
   - component: {fileID: 2944585158956418510}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Slot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48,6 +48,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnAmount: 30
   callableObjectInUse: 0
+  neighbors: []
+  gridPos: {x: 0, y: 0}
+  myPathElement: {fileID: 0}
 --- !u!65 &2944585158956418510
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -80,7 +83,7 @@ GameObject:
   - component: {fileID: 2148573766515412405}
   - component: {fileID: 7353765107341773113}
   - component: {fileID: 3396233849533041285}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}

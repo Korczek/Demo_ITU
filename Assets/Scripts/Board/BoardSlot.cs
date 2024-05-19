@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public enum NeighborDirection
@@ -10,18 +8,48 @@ public enum NeighborDirection
     Right,
     Null
 }
+
+public enum SlotRole
+{
+    Start,
+    Finish,
+    Path,
+    Obstacle,
+    Null
+}
+
 public class BoardSlot : SpawnableObject
 {
     public BoardSlot[] neighbors;
     public Vector2Int gridPos;
 
-    public Path myPathElement;
-    public bool IsFinish { get; private set; }
+    private SlotDecor _decor;
+    
+    public SlotRole slotRole { get; private set; } = SlotRole.Path;
     
     public override void OnSpawn()
     {
         neighbors = new BoardSlot[4];
         gridPos = Vector2Int.zero;
+    }
+
+    public void SetRole(SlotRole role)
+    {
+        slotRole = role;
+        // switch graphic 
+        // reset connections witch neighbors 
+    }
+
+    private void SetGraphic()
+    {
+        if (_decor != null)
+        {
+            SpawnMgr.Instance.Despawn(_decor);
+            _decor = null;
+        }
+        
+        _decor = SpawnMgr.Instance.Spawn(slotRole.ToString(), Vector3.zero, Vector3.zero, transform)
+            .GetComponent<SlotDecor>();
     }
 
     public void AnimSlotIn(float delay)
@@ -33,24 +61,23 @@ public class BoardSlot : SpawnableObject
             .Run();
     }
 
-    public bool DoIHavePathToFinish(HashSet<BoardSlot> visited)
+    public void OnInputDown()
     {
-        if (visited.Contains(this))
-            return false;
+        transform.AnimScale(.9f, .25f)
+            .Run(); // this is debug only for now 
         
-        visited.Add(this);
+        // push scale down and leave its there
+        
+        // start counter to display select bar 
+        // if selected slot switch during preparation stop select bar from starting 
+    }
 
-        if (IsFinish)
-            return true;
-
-        foreach (var n in neighbors.Where(n => n != null))
-        {
-            if (!n.DoIHavePathToFinish(visited))
-                continue;
-            
-            return true;
-        }
-
-        return false;
+    public void OnInputUp(bool isStillSelected)
+    {
+        transform.AnimScale(1f, .25f)
+            .Run(); // debug only 
+        // check if touched slot is still this same 
+        // if true, then run this select bar 
+        // else remove select bar 
     }
 }

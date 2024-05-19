@@ -4,9 +4,15 @@ using UnityEngine;
 public class GMgr : MonoBehaviourSingleton<GMgr>
 {
     private BoardSlot _start, _finish;
+    public Camera mainCamera { get; private set; }
+
+    public bool Loaded { get; private set; } = false;
+    
     private void Start()
     {
+        mainCamera = Camera.main;
         Board.Instance.GenerateGrid();
+        Loaded = true;
     }
     
     // make ui element that will popup when user holds mouse clicked on element for some time

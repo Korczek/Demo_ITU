@@ -210,12 +210,12 @@ public class Anim
 
     private IEnumerator ScaleCr()
     {
-        var startEuler = _tr.eulerAngles;
+        var startScale = _tr.localScale;
         var tPass = 0f;
         while (tPass <= _inTime)
         {
             var e = EasingMgr.GetEase(_ease, tPass / _inTime);
-            _tr.localScale = Vector3.LerpUnclamped(startEuler, _targetV3, e);
+            _tr.localScale = Vector3.LerpUnclamped(startScale, _targetV3, e);
             tPass += Time.deltaTime;
             yield return null;
         }

@@ -7,9 +7,9 @@ public class AnimController : MonoBehaviour
 
     public Anim StartAnimation(RunOption ro, Transform tr, Vector3 targetV3, float animTime)
     {
-        foreach (var aa in _allAnims)
-            if (aa.IsThisSameRunOption(ro))
-                aa.Stop(false);
+        for (var i = 0; i < _allAnims.Count; i++)
+            if (_allAnims[i].IsThisSameRunOption(ro))
+                _allAnims[i].Stop(false);
         
         var anim = new Anim(ro, tr, targetV3, animTime, this);
         _allAnims.Add(anim);
