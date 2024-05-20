@@ -79,7 +79,10 @@ public class Const : MonoBehaviourSingleton<Const>
 public class Materials
 {
     public Material[] slotsMaterials;
-    
+    public Material stepMaterial;
+
+    public Material GetStepMaterial
+        => stepMaterial;
 }
 
 public struct MapInitData

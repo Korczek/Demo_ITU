@@ -55,31 +55,63 @@ public class BoardSlot : SpawnableObject
 
     public void Initialize(float delay, SlotRole role)
     {
+        slotRole = role;
         meshRenderer.sharedMaterial = Const.Materials.slotsMaterials[(int)role];
         transform.localScale = Vector3.zero;
         transform.AnimScale(1, .45f)
             .SetEase(Ease.OutBack)
             .SetDelay(delay)
             .Run();
+        
+        if (role == SlotRole.Start)
+            Mgr.Instance.SetStartPoint(this);
+        
+        if (role == SlotRole.Finish)
+            Mgr.Instance.SetFinishPoint(this);
+    }
+
+    public void ShowAsPath(float delay)
+    {
+        transform.AnimScale(.8f, .2f)
+            .OnComplete(() =>
+            {
+                if (slotRole == SlotRole.Path)
+                    meshRenderer.sharedMaterial = Const.Materials.GetStepMaterial;
+                
+                transform.AnimScale(1, .2f)
+                    .SetEase(Ease.OutBack)
+                    .OnComplete(HidePath)
+                    .Run();
+
+            })
+            .SetEase(Ease.InBack)
+            .SetDelay(delay)
+            .Run();
+    }
+
+    private void HidePath()
+    {
+        transform.AnimScale(.8f, .2f)
+            .OnComplete(() =>
+            {
+                meshRenderer.sharedMaterial = Const.Materials.slotsMaterials[(int)slotRole];
+                transform.AnimScale(1f, .2f)
+                    .SetEase(Ease.OutBack)
+                    .Run();
+            })
+            .SetEase(Ease.InBack)
+            .Run();
     }
 
     public void OnInputDown()
     {
         transform.AnimScale(.9f, .25f)
-            .Run(); // this is debug only for now 
-        
-        // push scale down and leave its there
-        
-        // start counter to display select bar 
-        // if selected slot switch during preparation stop select bar from starting 
+            .Run();
     }
 
     public void OnInputUp(bool isStillSelected)
     {
         transform.AnimScale(1f, .25f)
-            .Run(); // debug only 
-        // check if touched slot is still this same 
-        // if true, then run this select bar 
-        // else remove select bar 
+            .Run();
     }
 }

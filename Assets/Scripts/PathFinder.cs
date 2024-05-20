@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using UnityEngine;
 
@@ -46,7 +44,6 @@ public class PathFinder : MonoBehaviourSingleton<PathFinder>
             
             foreach (var n in current.neighbors)
             {
-                
                 if (n == null || n.slotRole == SlotRole.Obstacle || closedSet.Contains(n))
                     continue;
 

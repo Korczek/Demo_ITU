@@ -17,6 +17,7 @@ public class PointerMenu : MonoBehaviourSingleton<PointerMenu>
     private bool _pointerActive;
     private bool _displayMenu;
     private BoardSlot _touchStartSlot;
+    private BoardSlot _selectedSlot;
     
     private bool _menuActive;
     
@@ -40,15 +41,15 @@ public class PointerMenu : MonoBehaviourSingleton<PointerMenu>
         _displayMenu = _pointerTime >= pointerLoadTime;
         _pointerTime += Time.deltaTime;
 
-        if (_nowTick < Time.time + _slotCheckTick) return; // przeciez zawszze bedzie mniejszy .... 
+        if (_nowTick > Time.time)
+            return;
+
+        _nowTick = Time.time + _slotCheckTick;
         
         if (_touchStartSlot == InputMgr.Instance.NowHoveredSlot)
-        {
-            // do tego wgl nie dochodzi 
-            Debug.Log(_touchStartSlot == InputMgr.Instance.NowHoveredSlot);
-            _nowTick = Time.time + _slotCheckTick;
-        }
+            return;
         
+        _displayMenu = false;
         HidePointer();
     }
 
@@ -72,8 +73,6 @@ public class PointerMenu : MonoBehaviourSingleton<PointerMenu>
         if (_touchStartSlot == null)
             return;
         
-        
-        _nowTick = 0;
         _pointerTime = 0;
         
         pointerFillImage.fillAmount = 0;
@@ -124,7 +123,7 @@ public class PointerMenu : MonoBehaviourSingleton<PointerMenu>
     
     private void ButtonPressed(SlotRole onButtonPressed)
     {
-        Debug.Log(_touchStartSlot);
+        _selectedSlot.Initialize(0f, onButtonPressed);
     }
     
     
@@ -135,6 +134,7 @@ public class PointerMenu : MonoBehaviourSingleton<PointerMenu>
 
     private void ShowMenu()
     {
+        _selectedSlot = _touchStartSlot;
         _menuActive = true;
 
         menuTransform.position = _touchStartSlot.transform.position;

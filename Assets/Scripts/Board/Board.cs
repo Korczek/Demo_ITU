@@ -46,10 +46,6 @@ public class Board : MonoBehaviourSingleton<Board>
             _allSlots.Add(slot);
             slot.Initialize(i * delay, role);
 
-            if (role == SlotRole.Start)
-                Mgr.Instance.SetStartPoint(slot);
-            if (role == SlotRole.Finish)
-                Mgr.Instance.SetFinishPoint(slot);
         }
 
         gameObject.WaitAndRun(

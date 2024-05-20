@@ -26,11 +26,16 @@ public class Mgr : MonoBehaviourSingleton<Mgr>
 
     public void SetStartPoint(BoardSlot start)
     {
+        if (_start != null)
+            _start.Initialize(0, SlotRole.Obstacle);
+        
         _start = start;
     }
 
     public void SetFinishPoint(BoardSlot finish)
     {
+        if (_finish != null)
+            _finish.Initialize(0, SlotRole.Obstacle);
         _finish = finish;
     }
 
@@ -44,9 +49,10 @@ public class Mgr : MonoBehaviourSingleton<Mgr>
 
         var path = PathFinder.Instance.FindPath(_start, _finish);
 
-        foreach (var p in path)
+        var delay = .1f;
+        for (var i = 0; i < path.Count; i++)
         {
-            Debug.Log(p.gridPos);
+            path[i].ShowAsPath(i*delay);
         }
     }
 }
