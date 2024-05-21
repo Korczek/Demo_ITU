@@ -8,19 +8,23 @@ public class InputMgr : MonoBehaviourSingleton<InputMgr>
     public BoardSlot TouchedSlot { get; private set; }
     public bool InputLocked { get; set; } = true;
 
-    public static Action OnTouchDown = null;
-    public static Action OnTouchUp = null;
-    
+    public static Action OnLeftButtonDown = null;
+    public static Action OnLeftButtonUp = null;
 
+    public static Action OnRightButtonDown = null;
+    public static Action OnRightButtonUp = null;
+
+    public static Action OnScrollWheelUp = null;
+    public static Action OnScrollWheelDown = null;
+
+    public static Vector2 InputPosition => new(Input.mousePosition.x, Input.mousePosition.y);
+    
     public Vector3 GetInputWorldPosition
         => Physics.Raycast(GetCameraRay(), out var hit, 100) ? hit.point : Vector3.zero;
 
     public BoardSlot NowHoveredSlot
         => !Physics.Raycast(GetCameraRay(), out var hit, 100) ? null : hit.collider.GetComponent<BoardSlot>();
 
-    public static Vector2 InputPosition => new(Input.mousePosition.x, Input.mousePosition.y);
-    // action that retuns how long button was hold 
-    
     
     private void Update()
     {
@@ -30,14 +34,26 @@ public class InputMgr : MonoBehaviourSingleton<InputMgr>
         InputDown = Input.GetMouseButtonDown(0);
         InputUp = Input.GetMouseButtonUp(0);
 
+        if (Input.GetMouseButtonDown(1))
+            OnRightButtonDown?.Invoke();
+        
+        if (Input.GetMouseButtonUp(1))
+            OnRightButtonUp?.Invoke();
+
+        if (Input.GetAxis("Mouse ScrollWheel") > 0)
+            OnScrollWheelUp?.Invoke();
+
+        if (Input.GetAxis("Mouse ScrollWheel") < 0)
+            OnScrollWheelDown?.Invoke();
+
         if (InputDown)
         {
-            OnTouchDown?.Invoke();
+            OnLeftButtonDown?.Invoke();
         }
 
         if (InputUp)
         {
-            OnTouchUp?.Invoke();
+            OnLeftButtonUp?.Invoke();
         }
 
         CheckTouchedSlot();

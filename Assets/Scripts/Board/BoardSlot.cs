@@ -32,25 +32,10 @@ public class BoardSlot : SpawnableObject
     {
         neighbors = new BoardSlot[4];
         gridPos = Vector2Int.zero;
-    }
-
-    public void SetRole(SlotRole role)
-    {
-        slotRole = role;
-        // switch graphic 
-        // reset connections witch neighbors 
-    }
-
-    private void SetGraphic()
-    {
-        if (_decor != null)
+        if (GetComponent<AnimController>())
         {
-            SpawnMgr.Instance.Despawn(_decor);
-            _decor = null;
+            
         }
-        
-        _decor = SpawnMgr.Instance.Spawn(slotRole.ToString(), Vector3.zero, Vector3.zero, transform)
-            .GetComponent<SlotDecor>();
     }
 
     public void Initialize(float delay, SlotRole role)
@@ -58,7 +43,7 @@ public class BoardSlot : SpawnableObject
         slotRole = role;
         meshRenderer.sharedMaterial = Const.Materials.slotsMaterials[(int)role];
         transform.localScale = Vector3.zero;
-        transform.AnimScale(1, .45f)
+        transform.AnimScale(1, .25f)
             .SetEase(Ease.OutBack)
             .SetDelay(delay)
             .Run();
@@ -68,6 +53,15 @@ public class BoardSlot : SpawnableObject
         
         if (role == SlotRole.Finish)
             Mgr.Instance.SetFinishPoint(this);
+    }
+
+    public void Despawn(float delay)
+    {
+        transform.AnimScale(0, .25f)
+            .SetEase(Ease.InBack)
+            .SetDelay(delay)
+            .OnComplete(() => SpawnMgr.Instance.Despawn(this))
+            .Run();
     }
 
     public void ShowAsPath(float delay)

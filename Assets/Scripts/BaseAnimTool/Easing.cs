@@ -44,23 +44,17 @@ public enum Ease
 public static class EasingMgr
 {
     public static float GetEase(Ease ease, float t)
-    {
-        // im getting only those that i'll be using for this demo 
-        switch (ease)
+        => ease switch
         {
             // cubic
-            case Ease.InCubic: return Easing.InCubic(t);
-            case Ease.OutCubic: return Easing.OutCubic(t);
-            case Ease.InOutCubic: return Easing.InOutCubic(t);
-            
+            Ease.InCubic => Easing.InCubic(t),
+            Ease.OutCubic => Easing.OutCubic(t),
+            Ease.InOutCubic => Easing.InOutCubic(t),
             // back
-            case Ease.InBack: return Easing.InBack(t);
-            case Ease.OutBack: return Easing.OutBack(t);
-            case Ease.InOutBack: return Easing.InOutBack(t);
-            
-            // i don't think that i need more ... 
-            
-            default: return Easing.Linear(t);
-        }
-    }
+            Ease.InBack => Easing.InBack(t),
+            Ease.OutBack => Easing.OutBack(t),
+            Ease.InOutBack => Easing.InOutBack(t),
+
+            _ => Easing.Linear(t)
+        };
 }

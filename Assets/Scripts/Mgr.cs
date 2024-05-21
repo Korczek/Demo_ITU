@@ -19,6 +19,12 @@ public class Mgr : MonoBehaviourSingleton<Mgr>
         UIMgr.Instance.SelectScreen(NowScreen.InGame);
         // set camera 
     }
+
+    public void ResetDemo()
+    {
+        Board.Instance.RemoveGrid();
+        UIMgr.Instance.SelectScreen(NowScreen.Start);
+    }
     
     // make ui element that will popup when user holds mouse clicked on element for some time
     // and dissapears when player remove click selected object 

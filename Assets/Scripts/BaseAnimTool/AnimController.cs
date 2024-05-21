@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class AnimController : MonoBehaviour 
@@ -33,7 +34,13 @@ public class AnimController : MonoBehaviour
                 _allAnims[i].Stop(false);
     }
 
+    private void StopAll(bool finish)
+    {
+        for (var i = 0; i < _allAnims.Count; i++)
+            _allAnims[i].Stop(finish);
+    }
+
     public void RemoveAnim(Anim anim) => _allAnims.Remove(anim);
 
-    public void StopAnimation(bool finishMovement) => _allAnims.ForEach(a => a.Stop(finishMovement));
+    public void StopAnimation(bool finishMovement) => StopAll(finishMovement);
 }

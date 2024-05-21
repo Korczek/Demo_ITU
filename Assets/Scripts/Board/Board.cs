@@ -75,6 +75,15 @@ public class Board : MonoBehaviourSingleton<Board>
         }
     }
 
+    public void RemoveGrid()
+    {
+        foreach (var s in _allSlots)
+        {
+            s.Despawn(.1f);
+        }
+        _allSlots.Clear();
+    }
+
     #endregion
     
 

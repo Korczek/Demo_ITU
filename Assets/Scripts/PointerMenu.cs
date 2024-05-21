@@ -23,8 +23,8 @@ public class PointerMenu : MonoBehaviourSingleton<PointerMenu>
     
     private void Start()
     {
-        InputMgr.OnTouchDown += ShowPointer;
-        InputMgr.OnTouchUp += HidePointer;
+        InputMgr.OnLeftButtonDown += ShowPointer;
+        InputMgr.OnLeftButtonUp += HidePointer;
         
         PreparePointer();
         PrepareMenu();
