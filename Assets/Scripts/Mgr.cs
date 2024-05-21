@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 
 public class Mgr : MonoBehaviourSingleton<Mgr>
@@ -56,9 +57,28 @@ public class Mgr : MonoBehaviourSingleton<Mgr>
         var path = PathFinder.Instance.FindPath(_start, _finish);
 
         var delay = .1f;
+
+        if (path == null)
+        {
+            PathNotClear();
+            return;
+        }
         for (var i = 0; i < path.Count; i++)
         {
             path[i].ShowAsPath(i*delay);
+        }
+
+    }
+
+    private void PathNotClear()
+    {
+        foreach (var screen in UIMgr.Instance.screens)
+        {
+            if (screen is not GameScreen gameScreen) 
+                continue;
+            
+            gameScreen.ShowPathNotClear();
+            return;
         }
     }
 }

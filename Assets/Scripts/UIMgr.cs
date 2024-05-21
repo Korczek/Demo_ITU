@@ -10,7 +10,10 @@ public enum NowScreen
 
 public class UIMgr : MonoBehaviourSingleton<UIMgr>
 {
+    public static NowScreen nowSelectedScreen { get; private set; }
     public MenuItem[] screens;
+    private bool _controlsWasDisplayed = false;
+    
     
     public void InitUi()
     {
@@ -25,11 +28,15 @@ public class UIMgr : MonoBehaviourSingleton<UIMgr>
     
     public void SelectScreen(NowScreen nScreen)
     {
-        for (var i = 0; i < screens.Length; i++)
+        if (nScreen == NowScreen.InGame && !_controlsWasDisplayed)
         {
-            screens[i].gameObject.SetActive(i == (int)nScreen);
-            // run show anim and create action to init another or something like that 
-            // insteas of just set active ... or move im doing more than i need 
+            nScreen = NowScreen.Controls;
+            _controlsWasDisplayed = true;
         }
+
+        nowSelectedScreen = nScreen;
+        
+        for (var i = 0; i < screens.Length; i++)
+            screens[i].gameObject.SetActive(i == (int)nScreen);
     }
 }

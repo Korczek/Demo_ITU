@@ -28,7 +28,7 @@ public class InputMgr : MonoBehaviourSingleton<InputMgr>
     
     private void Update()
     {
-        if (InputLocked)
+        if (InputLocked || UIMgr.nowSelectedScreen == NowScreen.Controls)
             return;
         
         InputDown = Input.GetMouseButtonDown(0);

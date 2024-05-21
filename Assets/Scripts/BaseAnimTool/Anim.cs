@@ -57,13 +57,26 @@ public class Anim
 
     public Anim Run()
     {
-        _workingCr = _controller.StartCoroutine(Runner());
+        try
+        {
+
+            _workingCr = _controller.StartCoroutine(Runner());
+        }
+        catch  (Exception ex)
+        {
+            Debug.LogWarning($"this error shouldn't destroy anything, so keep playing: {ex}");
+            
+            
+        }
+        
         return this;
     }
 
     public void Stop(bool complete)
     {
-        _controller.StopCoroutine(_workingCr);
+        if (_workingCr != null)
+            _controller.StopCoroutine(_workingCr);
+        
         _controller.RemoveAnim(this);
 
         if (!complete)
