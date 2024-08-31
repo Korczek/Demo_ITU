@@ -1,4 +1,5 @@
 using UnityEngine;
+using Fidgety.CustomAnimation;
 
 public enum NeighborDirection
 {

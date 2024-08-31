@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Fidgety.CustomAnimation;
 
 public class GameScreen : MenuItem
 {

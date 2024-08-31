@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class MonoBehaviourSingleton<T> : MonoBehaviour where T : Component

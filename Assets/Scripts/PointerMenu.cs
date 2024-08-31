@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using Fidgety.CustomAnimation;
 
 public class PointerMenu : MonoBehaviourSingleton<PointerMenu>
 {

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Fidgety.CustomAnimation;
 
 public class Board : MonoBehaviourSingleton<Board>
 {
